@@ -4,8 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.phonebook.R
+import com.example.phonebook.databinding.FragmentContactEditBinding
+import com.example.phonebook.viewmodels.ContactEditViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +29,9 @@ class ContactEdit : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var contactEditViewModel: ContactEditViewModel
+    private lateinit var binding: FragmentContactEditBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -30,12 +40,19 @@ class ContactEdit : Fragment() {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact_edit, container, false)
+        contactEditViewModel = ViewModelProvider(this)[ContactEditViewModel::class.java]
+
+        binding = FragmentContactEditBinding.inflate(inflater, container, false)
+        binding.contactEditViewModel = contactEditViewModel
+        binding.lifecycleOwner = viewLifecycleOwner // Important for LiveData
+
+        return binding.root
     }
 
     companion object {
