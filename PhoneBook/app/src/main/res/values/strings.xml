@@ -1,16 +1,14 @@
 <resources>
     <string name="app_name">PhoneBook</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="button_edit">Edytuj</string>
     <string name="button_add">Dodaj</string>
     <string name="button_delete">Usuń</string>
+    <string name="button_save">Zapisz</string>
     <string name="text_view_first_name">Imię</string>
     <string name="text_view_last_name">Nazwisko</string>
     <string name="text_view_phone_number">Numer telefonu</string>
     <string name="button_cancel">Anuluj</string>
-    <color name="green">#0ead62</color>
-    <color name="background_grey">#161c1a</color>
-    <color name="light_green">#dcefdb</color>
-    <color name="hint_grey">#7c847c</color>
     <string name="text_view_name">Imię i nazwisko</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

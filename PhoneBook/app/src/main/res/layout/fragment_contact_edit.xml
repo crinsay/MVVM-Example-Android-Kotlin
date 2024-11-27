@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ContactEdit"
-    android:background="@color/background_grey">
+    tools:context=".fragments.ContactEdit"
+    android:background="@color/grey">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -21,33 +22,33 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="@string/button_add"
+                android:backgroundTint="@color/green"
+                android:text="@string/button_save"
                 android:textSize="20sp"
-                tools:ignore="ButtonStyle"
-                android:backgroundTint="@color/green"/>
+                tools:ignore="ButtonStyle" />
 
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/cancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/green"
                 android:text="@string/button_cancel"
                 android:textSize="20sp"
-                tools:ignore="ButtonStyle"
-                android:backgroundTint="@color/green" />
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -66,22 +67,22 @@
                     android:layout_margin="5dp"
                     android:layout_weight="2"
                     android:text="@string/text_view_first_name"
-                    android:textSize="20sp"
-                    android:textColor="@color/light_green"/>
+                    android:textColor="@color/light_green"
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextFirstName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:textSize="20sp"
                     android:focusable="true"
+                    android:hint="@string/text_view_first_name"
                     android:importantForAutofill="no"
                     android:inputType="text"
-                    android:hint="@string/text_view_first_name"
-                    tools:ignore="LabelFor"
                     android:textColor="@color/light_green"
-                    android:textColorHint="@color/hint_grey"/>
+                    android:textColorHint="@color/hint_grey"
+                    android:textSize="20sp"
+                    tools:ignore="LabelFor" />
 
 
             </LinearLayout>
@@ -90,30 +91,30 @@
                 android:id="@+id/linearLayoutLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="20dp">
+                android:layout_margin="20dp"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/textViewLastName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:layout_margin="5dp"
-                    android:textSize="20sp"
+                    android:layout_weight="2"
                     android:text="@string/text_view_last_name"
-                    android:textColor="@color/light_green"/>
+                    android:textColor="@color/light_green"
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextLastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:textSize="20sp"
+                    android:hint="@string/text_view_last_name"
                     android:importantForAutofill="no"
                     android:inputType="text"
-                    android:hint="@string/text_view_last_name"
                     android:textColor="@color/light_green"
-                    android:textColorHint="@color/hint_grey"/>
-
+                    android:textColorHint="@color/hint_grey"
+                    android:textSize="20sp" />
 
 
             </LinearLayout>
@@ -130,21 +131,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="20sp"
                     android:text="@string/text_view_phone_number"
-                    android:textColor="@color/light_green" />
+                    android:textColor="@color/light_green"
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:importantForAutofill="no"
-                    android:textSize="20sp"
-                    android:inputType="phone"
                     android:hint="@string/text_view_phone_number"
+                    android:importantForAutofill="no"
+                    android:inputType="phone"
                     android:textColor="@color/light_green"
-                    android:textColorHint="@color/hint_grey"/>
+                    android:textColorHint="@color/hint_grey"
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
