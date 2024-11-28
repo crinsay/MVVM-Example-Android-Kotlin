@@ -19,4 +19,8 @@ class ContactRepository: IContactRepository {
     override fun deleteContact(index: Int) {
         _dbContext.contacts.removeAt(index)
     }
+
+    override fun getContact(index: Int): Contact{
+        return _dbContext.contacts[index]
+    }
 }
