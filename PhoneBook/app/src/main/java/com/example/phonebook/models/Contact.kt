@@ -2,6 +2,6 @@ package com.example.phonebook.models
 
 data class Contact(
     var firstName: String,
-    var secondName: String,
+    var lastName: String,
     var phoneNumber: String
 )

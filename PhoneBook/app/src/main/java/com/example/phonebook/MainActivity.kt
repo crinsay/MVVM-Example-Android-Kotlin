@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, ContactEdit())
+                .replace(R.id.fragmentContainer, ContactsList())
                 .commit()
         }
     }

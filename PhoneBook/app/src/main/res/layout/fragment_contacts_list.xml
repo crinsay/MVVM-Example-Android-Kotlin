@@ -35,17 +35,6 @@
             android:background="@color/light_grey">
 
             <Button
-                android:id="@+id/editButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:text="@string/button_edit"
-                tools:ignore="ButtonStyle"
-                android:textSize="20sp"
-                android:backgroundTint="@color/green"/>
-
-            <Button
                 android:id="@+id/addButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -56,16 +45,6 @@
                 android:textSize="20sp"
                 android:backgroundTint="@color/green" />
 
-            <Button
-                android:id="@+id/deleteButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:text="@string/button_delete"
-                tools:ignore="ButtonStyle"
-                android:textSize="20sp"
-                android:backgroundTint="@color/green" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
