@@ -22,6 +22,13 @@ class ContactEditViewModel(private val contactRepository: IContactRepository) : 
         }
     }
 
+    fun updateEditContact(index: Int){
+        val contactToEdit = contactRepository.getContact(index)
+        firstName.value = contactToEdit.firstName
+        lastName.value = contactToEdit.lastName
+        phoneNumber.value = contactToEdit.phoneNumber
+    }
+
     private fun isContactCreatable(): Boolean =
         ((firstName.value!= null &&  lastName.value!= null &&  phoneNumber.value!=null)
                 && (firstName.value.toString().trim()!=""

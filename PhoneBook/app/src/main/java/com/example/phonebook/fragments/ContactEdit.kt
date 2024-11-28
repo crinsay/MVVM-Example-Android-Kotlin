@@ -56,6 +56,10 @@ class ContactEdit : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (contactIndex != null){
+            contactEditViewModel.updateEditContact(contactIndex!!)
+        }
+
         saveButton = view.findViewById(R.id.saveButton)
         saveButton.isEnabled = false
 

@@ -5,4 +5,5 @@ interface IContactRepository {
     fun addContact(contact: Contact)
     fun editContact(index: Int, contact: Contact)
     fun deleteContact(index: Int)
+    fun getContact(index: Int): Contact
 }
