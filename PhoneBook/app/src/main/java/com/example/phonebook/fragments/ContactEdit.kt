@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.phonebook.R
 import com.example.phonebook.databinding.FragmentContactEditBinding
+import com.example.phonebook.models.ContactRepository
+import com.example.phonebook.models.IContactRepository
 import com.example.phonebook.viewmodels.ContactEditViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,6 +32,10 @@ class ContactEdit : Fragment() {
     private lateinit var contactEditViewModel: ContactEditViewModel
     private lateinit var binding: FragmentContactEditBinding
 
+    private lateinit var saveButton: Button
+    private lateinit var cancelButton: Button
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -44,9 +48,10 @@ class ContactEdit : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View{
         // Inflate the layout for this fragment
-        contactEditViewModel = ViewModelProvider(this)[ContactEditViewModel::class.java]
+        val contactRepo: IContactRepository = ContactRepository()
+        contactEditViewModel = ContactEditViewModel(contactRepo)
 
         binding = FragmentContactEditBinding.inflate(inflater, container, false)
         binding.contactEditViewModel = contactEditViewModel
@@ -55,6 +60,29 @@ class ContactEdit : Fragment() {
         return binding.root
     }
 
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        saveButton = view.findViewById(R.id.saveButton)
+        saveButton.isEnabled=false
+
+        //do zmiany
+        saveButton.setOnClickListener{
+            contactEditViewModel.saveContact(null)
+            goToList()
+        }
+
+        cancelButton= view.findViewById(R.id.cancelButton)
+        cancelButton.setOnClickListener{
+            goToList()
+        }
+
+        contactEditViewModel.isSaveButtonEnabled.observe(viewLifecycleOwner) { isEnabled ->
+            saveButton.isEnabled = isEnabled
+        }
+
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -72,6 +100,13 @@ class ContactEdit : Fragment() {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
                 }
+            }
+    }
+
+    private fun goToList(){
+        requireActivity()
+            .supportFragmentManager.commit {
+                replace<ContactsList>(R.id.fragmentContainer)
             }
     }
 }
