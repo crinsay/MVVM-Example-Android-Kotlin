@@ -13,31 +13,25 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.phonebook.R
+import com.example.phonebook.factories.ViewModelFactory
 import com.example.phonebook.models.Contact
+import com.example.phonebook.models.ContactRepository
+import com.example.phonebook.models.IContactRepository
+import com.example.phonebook.viewmodels.ContactEditViewModel
 import com.example.phonebook.viewmodels.ContactsListViewModel
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 
 class ContactsList : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
     private lateinit var contactsListView: ListView
     private lateinit var addContactButton: Button
+    private lateinit var contactsListAdapter: ContactsListAdapter
 
-    private val contactsListViewModel = ContactsListViewModel()
+    private lateinit var contactsListViewModel: ContactsListViewModel
 
-    private val testData = listOf(Contact("Leo", "Messi", "93893139183"),
-        Contact("Leo11", "Messi11", "9389313918233"),
-        Contact("Ronaldo", "xdddd", "938933"),
-        Contact("Pessi", "Penaldo", "+48 663 224 506"),
-        Contact("Pessi", "Penaldo", "+48 663 224 506"))
-
-    inner class ContactsListAdapter(private val data: List<Contact>): BaseAdapter() {
+    inner class ContactsListAdapter(private var data: List<Contact>): BaseAdapter() {
         override fun getCount(): Int = data.size
 
         override fun getItem(position: Int): Any = data[position]
@@ -61,14 +55,15 @@ class ContactsList : Fragment() {
             return newConvertView
         }
 
+        fun updateData(newData: List<Contact>) {
+            data = newData
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,8 +74,17 @@ class ContactsList : Fragment() {
             goToContactEdit(null)
         }
 
+        contactsListAdapter = ContactsListAdapter(emptyList())
+
         contactsListView = view.findViewById(R.id.contactsListView)
-        contactsListView.adapter = ContactsListAdapter(testData)
+        contactsListView.adapter = contactsListAdapter
+
+        contactsListViewModel.contacts.observe(viewLifecycleOwner) { contacts ->
+            contacts?.let {
+                contactsListAdapter.updateData(it)
+            }
+        }
+
         contactsListView.setOnItemLongClickListener { parent, view, position, _ ->
             val popupMenu = PopupMenu(parent.context, view)
 
@@ -116,28 +120,14 @@ class ContactsList : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        contactsListViewModel = ViewModelProvider(this, ViewModelFactory)[ContactsListViewModel::class.java]
+
         return inflater.inflate(R.layout.fragment_contacts_list, container, false)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ContactsList.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ContactsList().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = ContactsList()
     }
 
     private fun goToContactEdit(index: Int?) {

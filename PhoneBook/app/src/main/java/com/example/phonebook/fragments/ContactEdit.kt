@@ -8,8 +8,11 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.phonebook.R
 import com.example.phonebook.databinding.FragmentContactEditBinding
+import com.example.phonebook.factories.ViewModelFactory
 import com.example.phonebook.models.ContactRepository
 import com.example.phonebook.models.IContactRepository
 import com.example.phonebook.viewmodels.ContactEditViewModel
@@ -17,7 +20,6 @@ import com.example.phonebook.viewmodels.ContactEditViewModel
 private const val ARG_CONTACT_INDEX = "param1"
 
 class ContactEdit : Fragment() {
-    // TODO: Rename and change types of parameters
     private var contactIndexParam: String? = null
     private var contactIndex: Int? = null
 
@@ -36,14 +38,12 @@ class ContactEdit : Fragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View{
         // Inflate the layout for this fragment
-        val contactRepo: IContactRepository = ContactRepository()
-        contactEditViewModel = ContactEditViewModel(contactRepo)
+        contactEditViewModel = ViewModelProvider(this, ViewModelFactory)[ContactEditViewModel::class.java]
 
         binding = FragmentContactEditBinding.inflate(inflater, container, false)
         binding.contactEditViewModel = contactEditViewModel
@@ -57,17 +57,17 @@ class ContactEdit : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         saveButton = view.findViewById(R.id.saveButton)
-        saveButton.isEnabled=false
+        saveButton.isEnabled = false
 
         //do zmiany
         saveButton.setOnClickListener{
-            contactEditViewModel.saveContact(null)
-            goToList()
+            contactEditViewModel.saveContact(contactIndex)
+            goToContactsList()
         }
 
         cancelButton= view.findViewById(R.id.cancelButton)
         cancelButton.setOnClickListener{
-            goToList()
+            goToContactsList()
         }
 
         contactEditViewModel.isSaveButtonEnabled.observe(viewLifecycleOwner) { isEnabled ->
@@ -85,7 +85,7 @@ class ContactEdit : Fragment() {
             }
     }
 
-    private fun goToList(){
+    private fun goToContactsList(){
         requireActivity()
             .supportFragmentManager.commit {
                 replace<ContactsList>(R.id.fragmentContainer)
