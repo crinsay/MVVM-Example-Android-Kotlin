@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/linearLayout2"
+                android:id="@+id/buttonsLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
@@ -57,20 +57,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                app:layout_constraintBottom_toTopOf="@+id/buttonsLinearLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutFirstName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="20dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textViewFirstName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -98,14 +96,12 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutLastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textViewLastName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -115,13 +111,14 @@
                         android:textSize="20sp" />
 
                     <EditText
-                        android:id="@+id/editTextLastName"
+                        android:id="@+id/lastNameEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:hint="@string/text_view_last_name"
                         android:importantForAutofill="no"
                         android:inputType="text"
+                        android:text="@={contactEditViewModel.lastName}"
                         android:textColor="@color/light_green"
                         android:textColorHint="@color/hint_grey"
                         android:textSize="20sp" />
@@ -130,14 +127,12 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textViewPhoneNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -146,13 +141,14 @@
                         android:textSize="20sp" />
 
                     <EditText
-                        android:id="@+id/editTextPhoneNumber"
+                        android:id="@+id/phoneNumberEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="@string/text_view_phone_number"
                         android:importantForAutofill="no"
                         android:inputType="phone"
+                        android:text="@={contactEditViewModel.phoneNumber}"
                         android:textColor="@color/light_green"
                         android:textColorHint="@color/hint_grey"
                         android:textSize="20sp" />
