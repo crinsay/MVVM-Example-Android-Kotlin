@@ -5,8 +5,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.phonebook.fragments.ContactEdit
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.phonebook.fragments.ContactsList
+import com.example.phonebook.models.ContactRepository
+import com.example.phonebook.models.IContactRepository
+import com.example.phonebook.factories.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,9 +24,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, ContactEdit())
-                .commit()
+            supportFragmentManager.commit {
+                replace<ContactsList>(R.id.fragmentContainer)
+            }
         }
     }
 }

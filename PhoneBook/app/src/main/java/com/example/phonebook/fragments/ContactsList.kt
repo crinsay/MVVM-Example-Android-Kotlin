@@ -1,33 +1,118 @@
 package com.example.phonebook.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Button
+import android.widget.ListView
+import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.phonebook.R
+import com.example.phonebook.factories.ViewModelFactory
+import com.example.phonebook.models.Contact
+import com.example.phonebook.models.ContactRepository
+import com.example.phonebook.models.IContactRepository
+import com.example.phonebook.viewmodels.ContactEditViewModel
+import com.example.phonebook.viewmodels.ContactsListViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ContactsList.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ContactsList : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var contactsListView: ListView
+    private lateinit var addContactButton: Button
+    private lateinit var contactsListAdapter: ContactsListAdapter
+
+    private lateinit var contactsListViewModel: ContactsListViewModel
+
+    inner class ContactsListAdapter(private var data: List<Contact>): BaseAdapter() {
+        override fun getCount(): Int = data.size
+
+        override fun getItem(position: Int): Any = data[position]
+
+        override fun getItemId(position: Int): Long = position.toLong()
+
+        @SuppressLint("SetTextI18n")
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            val newConvertView = convertView ?: LayoutInflater.from(parent?.context).inflate(
+                R.layout.fragment_contacts_list_element, parent, false
+            )
+
+            val contact = getItem(position) as Contact
+
+            val fullNameTextView = newConvertView.findViewById<TextView>(R.id.fullNameTextView)
+            val phoneNumberTextView = newConvertView.findViewById<TextView>(R.id.phoneNumberTextView)
+
+            fullNameTextView.text = "${contact.firstName} ${contact.lastName}"
+            phoneNumberTextView.text = contact.phoneNumber
+
+            return newConvertView
+        }
+
+        fun updateData(newData: List<Contact>) {
+            data = newData
+            notifyDataSetChanged()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        addContactButton = view.findViewById(R.id.addButton)
+        addContactButton.setOnClickListener{
+            goToContactEdit(null)
+        }
+
+        contactsListAdapter = ContactsListAdapter(emptyList())
+
+        contactsListView = view.findViewById(R.id.contactsListView)
+        contactsListView.adapter = contactsListAdapter
+
+        contactsListViewModel.contacts.observe(viewLifecycleOwner) { contacts ->
+            contacts?.let {
+                contactsListAdapter.updateData(it)
+            }
+        }
+
+        contactsListView.setOnItemLongClickListener { parent, view, position, _ ->
+            val popupMenu = PopupMenu(parent.context, view)
+
+            popupMenu.menuInflater
+                .inflate(R.menu.menu_list_view_options, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.editOption -> {
+                        val contactIndex = parent.adapter
+                            .getItemId(position).toInt()
+                        goToContactEdit(contactIndex)
+
+                        true
+                    }
+                    R.id.deleteOption -> {
+                        val contactIndex = parent.adapter
+                            .getItemId(position).toInt()
+                        contactsListViewModel.deleteContact(contactIndex)
+
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
+            true
         }
     }
 
@@ -35,27 +120,21 @@ class ContactsList : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        contactsListViewModel = ViewModelProvider(this, ViewModelFactory)[ContactsListViewModel::class.java]
+
         return inflater.inflate(R.layout.fragment_contacts_list, container, false)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ContactsList.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ContactsList().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        fun newInstance() = ContactsList()
+    }
+
+    private fun goToContactEdit(index: Int?) {
+        val contactEditFragment = ContactEdit.newInstance(index.toString())
+        requireActivity().supportFragmentManager
+            .commit {
+                replace(R.id.fragmentContainer, contactEditFragment)
             }
     }
 }

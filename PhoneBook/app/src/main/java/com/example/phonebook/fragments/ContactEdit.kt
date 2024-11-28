@@ -8,26 +8,20 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.phonebook.R
 import com.example.phonebook.databinding.FragmentContactEditBinding
+import com.example.phonebook.factories.ViewModelFactory
 import com.example.phonebook.models.ContactRepository
 import com.example.phonebook.models.IContactRepository
 import com.example.phonebook.viewmodels.ContactEditViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_CONTACT_INDEX = "param1"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ContactEdit.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ContactEdit : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var contactIndexParam: String? = null
+    private var contactIndex: Int? = null
 
     private lateinit var contactEditViewModel: ContactEditViewModel
     private lateinit var binding: FragmentContactEditBinding
@@ -39,19 +33,17 @@ class ContactEdit : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            contactIndexParam = it.getString(ARG_CONTACT_INDEX)
+            contactIndex = contactIndexParam?.toIntOrNull()
         }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View{
         // Inflate the layout for this fragment
-        val contactRepo: IContactRepository = ContactRepository()
-        contactEditViewModel = ContactEditViewModel(contactRepo)
+        contactEditViewModel = ViewModelProvider(this, ViewModelFactory)[ContactEditViewModel::class.java]
 
         binding = FragmentContactEditBinding.inflate(inflater, container, false)
         binding.contactEditViewModel = contactEditViewModel
@@ -65,17 +57,17 @@ class ContactEdit : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         saveButton = view.findViewById(R.id.saveButton)
-        saveButton.isEnabled=false
+        saveButton.isEnabled = false
 
         //do zmiany
         saveButton.setOnClickListener{
-            contactEditViewModel.saveContact(null)
-            goToList()
+            contactEditViewModel.saveContact(contactIndex)
+            goToContactsList()
         }
 
         cancelButton= view.findViewById(R.id.cancelButton)
         cancelButton.setOnClickListener{
-            goToList()
+            goToContactsList()
         }
 
         contactEditViewModel.isSaveButtonEnabled.observe(viewLifecycleOwner) { isEnabled ->
@@ -84,26 +76,16 @@ class ContactEdit : Fragment() {
 
     }
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ContactEdit.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(contactIndexParam: String) =
             ContactEdit().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString(ARG_CONTACT_INDEX, contactIndexParam)
                 }
             }
     }
 
-    private fun goToList(){
+    private fun goToContactsList(){
         requireActivity()
             .supportFragmentManager.commit {
                 replace<ContactsList>(R.id.fragmentContainer)

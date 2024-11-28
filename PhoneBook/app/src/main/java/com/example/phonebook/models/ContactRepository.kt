@@ -2,13 +2,21 @@ package com.example.phonebook.models
 
 class ContactRepository: IContactRepository {
 
-    private val contacts = mutableListOf<Contact>()
+    private val _dbContext = InMemoryDatabase
+
+    override fun getAllContacts(): List<Contact> {
+        return _dbContext.contacts
+    }
 
     override fun addContact(contact: Contact) {
-        contacts.add(contact)
+        _dbContext.contacts.add(contact)
     }
 
     override fun editContact(index: Int, contact: Contact){
-        contacts[index] = contact
+        _dbContext.contacts[index] = contact
+    }
+
+    override fun deleteContact(index: Int) {
+        _dbContext.contacts.removeAt(index)
     }
 }

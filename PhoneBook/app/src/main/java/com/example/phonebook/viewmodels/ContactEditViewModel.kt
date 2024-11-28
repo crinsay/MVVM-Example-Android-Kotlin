@@ -15,7 +15,6 @@ class ContactEditViewModel(private val contactRepository: IContactRepository) : 
         if (isContactCreatable()) {
             val contact = Contact(firstName.value!!, lastName.value!!, phoneNumber.value!!)
 
-
             if (index == null)
                 contactRepository.addContact(contact)
             else
