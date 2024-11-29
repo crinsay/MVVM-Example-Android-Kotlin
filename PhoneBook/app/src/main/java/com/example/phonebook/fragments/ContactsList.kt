@@ -12,15 +12,10 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.fragment.app.replace
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.phonebook.R
 import com.example.phonebook.factories.ViewModelFactory
 import com.example.phonebook.models.Contact
-import com.example.phonebook.models.ContactRepository
-import com.example.phonebook.models.IContactRepository
-import com.example.phonebook.viewmodels.ContactEditViewModel
 import com.example.phonebook.viewmodels.ContactsListViewModel
 
 
@@ -28,9 +23,10 @@ class ContactsList : Fragment() {
     private lateinit var contactsListView: ListView
     private lateinit var addContactButton: Button
     private lateinit var contactsListAdapter: ContactsListAdapter
-
     private lateinit var contactsListViewModel: ContactsListViewModel
 
+
+    //Custom adapter for ListView:
     inner class ContactsListAdapter(private var data: List<Contact>): BaseAdapter() {
         override fun getCount(): Int = data.size
 
@@ -61,28 +57,17 @@ class ContactsList : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        addContactButton = view.findViewById(R.id.addButton)
-        addContactButton.setOnClickListener{
-            goToContactEdit(null)
-        }
-
+        //Adapter and ListView config:
         contactsListAdapter = ContactsListAdapter(emptyList())
 
         contactsListView = view.findViewById(R.id.contactsListView)
         contactsListView.adapter = contactsListAdapter
 
         contactsListViewModel.contacts.observe(viewLifecycleOwner) { contacts ->
-            contacts?.let {
-                contactsListAdapter.updateData(it)
-            }
+            contactsListAdapter.updateData(contacts)
         }
 
         contactsListView.setOnItemLongClickListener { parent, view, position, _ ->
@@ -114,6 +99,12 @@ class ContactsList : Fragment() {
             popupMenu.show()
             true
         }
+
+        //Add new contact button config:
+        addContactButton = view.findViewById(R.id.addButton)
+        addContactButton.setOnClickListener{
+            goToContactEdit(null)
+        }
     }
 
     override fun onCreateView(
@@ -130,6 +121,8 @@ class ContactsList : Fragment() {
         fun newInstance() = ContactsList()
     }
 
+
+    //Go to ContactEdit fragment:
     private fun goToContactEdit(index: Int?) {
         val contactEditFragment = ContactEdit.newInstance(index.toString())
         requireActivity().supportFragmentManager

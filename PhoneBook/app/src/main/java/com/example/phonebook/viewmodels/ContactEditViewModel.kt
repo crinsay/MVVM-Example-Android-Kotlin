@@ -13,7 +13,9 @@ class ContactEditViewModel(private val contactRepository: IContactRepository) : 
 
     fun saveContact(index: Int?) {
         if (isContactCreatable()) {
-            val contact = Contact(firstName.value!!, lastName.value!!, phoneNumber.value!!)
+            val contact = Contact(firstName.value!!.trim(),
+                                  lastName.value!!.trim(),
+                                  phoneNumber.value!!.trim())
 
             if (index == null)
                 contactRepository.addContact(contact)
@@ -22,20 +24,21 @@ class ContactEditViewModel(private val contactRepository: IContactRepository) : 
         }
     }
 
-    fun updateEditContact(index: Int){
+    fun fillEditTexts(index: Int) {
         val contactToEdit = contactRepository.getContact(index)
+
         firstName.value = contactToEdit.firstName
         lastName.value = contactToEdit.lastName
         phoneNumber.value = contactToEdit.phoneNumber
     }
 
     private fun isContactCreatable(): Boolean =
-        ((firstName.value!= null &&  lastName.value!= null &&  phoneNumber.value!=null)
-                && (firstName.value.toString().trim()!=""
-                && lastName.value.toString().trim()!=""
-                && phoneNumber.value.toString().trim()!=""))
+        ((firstName.value != null && lastName.value != null && phoneNumber.value != null)
+                && (firstName.value!!.trim().isNotEmpty()
+                && lastName.value!!.trim().isNotEmpty()
+                && phoneNumber.value!!.trim().isNotEmpty()))
 
-     //LiveData na potrzeby przycisku
+    //LiveData for save button:
     val isSaveButtonEnabled = MediatorLiveData<Boolean>().apply {
         addSource(firstName) { checkFields() }
         addSource(lastName) { checkFields() }

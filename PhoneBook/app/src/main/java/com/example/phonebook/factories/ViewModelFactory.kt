@@ -11,14 +11,16 @@ object ViewModelFactory : ViewModelProvider.Factory {
     private val contactRepo: IContactRepository = ContactRepository()
 
     override fun <TViewModel : ViewModel> create(modelClass: Class<TViewModel>): TViewModel {
-        if (modelClass.isAssignableFrom(ContactsListViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return ContactsListViewModel(contactRepo) as TViewModel
+        return when {
+            modelClass.isAssignableFrom(ContactsListViewModel::class.java) -> {
+                @Suppress("UNCHECKED_CAST")
+                ContactsListViewModel(contactRepo) as TViewModel
+            }
+            modelClass.isAssignableFrom(ContactEditViewModel::class.java) -> {
+                @Suppress("UNCHECKED_CAST")
+                ContactEditViewModel(contactRepo) as TViewModel
+            }
+            else -> throw IllegalArgumentException("Unknown ViewModel (not even possible")
         }
-        else if (modelClass.isAssignableFrom(ContactEditViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return ContactEditViewModel(contactRepo) as TViewModel
-        }
-        throw IllegalArgumentException("Unknown ViewModel class (not even possible)")
     }
 }

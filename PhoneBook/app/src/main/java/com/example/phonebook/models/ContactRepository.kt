@@ -8,19 +8,19 @@ class ContactRepository: IContactRepository {
         return _dbContext.contacts
     }
 
+    override fun getContact(index: Int): Contact {
+        return _dbContext.contacts[index]
+    }
+
     override fun addContact(contact: Contact) {
         _dbContext.contacts.add(contact)
     }
 
-    override fun editContact(index: Int, contact: Contact){
+    override fun editContact(index: Int, contact: Contact) {
         _dbContext.contacts[index] = contact
     }
 
     override fun deleteContact(index: Int) {
         _dbContext.contacts.removeAt(index)
-    }
-
-    override fun getContact(index: Int): Contact{
-        return _dbContext.contacts[index]
     }
 }
