@@ -9,12 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.phonebook.R
 import com.example.phonebook.databinding.FragmentContactEditBinding
 import com.example.phonebook.factories.ViewModelFactory
-import com.example.phonebook.models.ContactRepository
-import com.example.phonebook.models.IContactRepository
 import com.example.phonebook.viewmodels.ContactEditViewModel
 
 private const val ARG_CONTACT_INDEX = "param1"
@@ -23,11 +20,10 @@ class ContactEdit : Fragment() {
     private var contactIndexParam: String? = null
     private var contactIndex: Int? = null
 
-    private lateinit var contactEditViewModel: ContactEditViewModel
-    private lateinit var binding: FragmentContactEditBinding
-
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
+    private lateinit var contactEditViewModel: ContactEditViewModel
+    private lateinit var binding: FragmentContactEditBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,13 +37,12 @@ class ContactEdit : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View{
-        // Inflate the layout for this fragment
+    ): View {
         contactEditViewModel = ViewModelProvider(this, ViewModelFactory)[ContactEditViewModel::class.java]
 
         binding = FragmentContactEditBinding.inflate(inflater, container, false)
         binding.contactEditViewModel = contactEditViewModel
-        binding.lifecycleOwner = viewLifecycleOwner // Important for LiveData
+        binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
     }
@@ -56,29 +51,28 @@ class ContactEdit : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (contactIndex != null){
-            contactEditViewModel.updateEditContact(contactIndex!!)
+        if (contactIndex != null) {
+            contactEditViewModel.fillEditTexts(contactIndex!!)
         }
 
         saveButton = view.findViewById(R.id.saveButton)
         saveButton.isEnabled = false
 
-        //do zmiany
-        saveButton.setOnClickListener{
+        saveButton.setOnClickListener {
             contactEditViewModel.saveContact(contactIndex)
             goToContactsList()
         }
 
-        cancelButton= view.findViewById(R.id.cancelButton)
-        cancelButton.setOnClickListener{
+        cancelButton = view.findViewById(R.id.cancelButton)
+        cancelButton.setOnClickListener {
             goToContactsList()
         }
 
         contactEditViewModel.isSaveButtonEnabled.observe(viewLifecycleOwner) { isEnabled ->
             saveButton.isEnabled = isEnabled
         }
-
     }
+
     companion object {
         @JvmStatic
         fun newInstance(contactIndexParam: String) =
